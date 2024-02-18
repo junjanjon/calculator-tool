@@ -13,6 +13,8 @@ const formulaCalculator = (formula: string) => {
     if (formula.match(/[^0-9+\-*/().]/)) {
       return null;
     }
+    // WARNING: eval を利用している。自分でパースすることでセキュリティを向上できる。
+    // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/eval
     const result = eval?.(`"use strict"; ${formula}`);
     return result;
   }
