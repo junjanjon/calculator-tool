@@ -4,31 +4,87 @@ import Input from '@mui/joy/Input';
 import Grid from '@mui/joy/Grid';
 import { Button } from "@mui/joy";
 
+const formulaCalculator = (formula: string) => {
+  try {
+    if (formula === "") {
+      return "";
+    }
+    // formula の中に指定外の文字が含まれている場合は null を返す
+    if (formula.match(/[^0-9+\-*/().]/)) {
+      return null;
+    }
+    const result = eval?.(`"use strict"; ${formula}`);
+    return result;
+  }
+  catch (e) {
+    return null;
+  }
+};
+
 function App() {
   const [formula, setFormula] = useState("")
+  const [result, setResult] = useState("")
 
-  const onClick = (value: string) => {
-    setFormula(formula + value)
+  const nextFormulaUpdate = (nextFormula: string) => {
+    setFormula(nextFormula);
+    const formulaResult = formulaCalculator(nextFormula)
+    if (formulaResult !== null) {
+      setResult(formulaResult.toString())
+    }
   }
 
+  const onClick = (value: string) => {
+    const nextFormula = formula + value;
+    nextFormulaUpdate(nextFormula);
+  };
+
   const onClickEqual = () => {
-    try {
-      const result = eval(formula);
-      setFormula(result);
+    const formulaResult = formulaCalculator(formula)
+    if (formulaResult !== null) {
+      setFormula(formulaResult.toString());
+      setResult(formulaResult.toString());
     }
-    catch (e) {
-      setFormula("error");
+    else {
+      setResult("Error");
     }
   };
 
+  const onClickBackClear = () => {
+    const nextFormula = formula.slice(0, -1);
+    nextFormulaUpdate(nextFormula);
+  }
+
   const onClickClear = () => {
     setFormula("");
+    setResult("")
+  }
+
+  const onClickAddBraces = () => {
+    // formula 中に余っている "(" がある場合は ")" を追加する
+    let leftBraceCount = 0;
+    let rightBraceCount = 0;
+    for (let i = 0; i < formula.length; i++) {
+      if (formula[i] === "(") {
+        leftBraceCount++;
+      }
+      if (formula[i] === ")") {
+        rightBraceCount++;
+      }
+    }
+    if (leftBraceCount > rightBraceCount) {
+      const nextFormula = formula + ")";
+      nextFormulaUpdate(nextFormula);
+    }
+    else {
+      const nextFormula = formula + "(";
+      nextFormulaUpdate(nextFormula);
+    }
   }
 
   const buttons = [
     {value: "AC", onClick: () => onClickClear()},
-    {value: "", onClick: () => onClickClear()},
-    {value: "", onClick: () => onClickClear()},
+    {value: "()", onClick: () => onClickAddBraces()},
+    {value: null},
     {value: "/", onClick: () => onClick("/")},
     {value: "7", onClick: () => onClick("7")},
     {value: "8", onClick: () => onClick("8")},
@@ -44,7 +100,7 @@ function App() {
     {value: "+", onClick: () => onClick("+")},
     {value: "0", onClick: () => onClick("0")},
     {value: ".", onClick: () => onClick(".")},
-    {value: <></>, onClick: () => onClickEqual()},
+    {value: "BACK", onClick: () => onClickBackClear()},
     {value: "=", onClick: () => onClickEqual()},
   ];
 
@@ -60,9 +116,18 @@ function App() {
             variant="solid"
             size={"lg"}
             value={formula}/>
+          <Input
+            color="primary"
+            size={"lg"}
+            value={result}/>
         </Grid>
         {
           buttons.map((button) => {
+            if (button.value === null) {
+              return (
+                <Grid xs={1} />
+              )
+            }
             return (
               <Grid xs={1}>
                 <Button
