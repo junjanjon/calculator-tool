@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import Grid from '@mui/joy/Grid';
+import BackspaceIcon from '@mui/icons-material/Backspace';
 
 const formulaCalculator = (formula: string) => {
   try {
@@ -100,7 +101,7 @@ function App() {
     {value: "+", onClick: () => onClick("+")},
     {value: "0", onClick: () => onClick("0")},
     {value: ".", onClick: () => onClick(".")},
-    {value: "BACK", onClick: () => onClickBackClear()},
+    {value: <BackspaceIcon />, onClick: () => onClickBackClear()},
     {value: "=", onClick: () => onClickEqual()},
   ];
 
@@ -121,11 +122,12 @@ function App() {
             style={{
               border: "none",
               backgroundColor: "darkgray",
-              width: "100%",
+              width: "90%",
               fontSize: "2em",
               color: "white",
               textAlign: "right",
             }}
+            disabled={true}
           />
         </Grid>
         <Grid xs={4}
@@ -138,11 +140,12 @@ function App() {
             style={{
               border: "none",
               backgroundColor: "darkgray",
-              width: "100%",
+              width: "90%",
               fontSize: "1.3em",
               color: "whitesmoke",
               textAlign: "right"
             }}
+            disabled={true}
           />
         </Grid>
         {
@@ -157,13 +160,19 @@ function App() {
                 <div
                   onClick={button.onClick}
                   style={{
+                    position: "relative",
                     backgroundColor: "gray",
-                    paddingTop: "40%",
-                    paddingBottom: "40%",
+                    paddingTop: "100%",
                     width: "100%",
-                    borderRadius: "50%"
+                    borderRadius: "50%",
                   }}>
-                  {button.value}
+                  <p
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}>{button.value}</p>
                 </div>
               </Grid>
             )
