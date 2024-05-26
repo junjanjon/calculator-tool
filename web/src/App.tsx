@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import Input from '@mui/joy/Input';
 import Grid from '@mui/joy/Grid';
-import { Button } from "@mui/joy";
 
 const formulaCalculator = (formula: string) => {
   try {
@@ -85,7 +83,7 @@ function App() {
 
   const buttons = [
     {value: "AC", onClick: () => onClickClear()},
-    {value: "()", onClick: () => onClickAddBraces()},
+    {value: "( )", onClick: () => onClickAddBraces()},
     {value: null},
     {value: "/", onClick: () => onClick("/")},
     {value: "7", onClick: () => onClick("7")},
@@ -112,16 +110,40 @@ function App() {
         container
         spacing={2}
         columns={{ xs:4 }}>
-        <Grid xs={4}>
-          <Input
-            color="primary"
-            variant="solid"
-            size={"lg"}
-            value={formula}/>
-          <Input
-            color="primary"
-            size={"lg"}
-            value={result}/>
+        <Grid xs={4}
+          style={{
+            backgroundColor: "darkgray",
+            borderRadius: "10px 10px 0 0",
+          }}>
+          <input
+            color={"dark"}
+            value={formula}
+            style={{
+              border: "none",
+              backgroundColor: "darkgray",
+              width: "100%",
+              fontSize: "2em",
+              color: "white",
+              textAlign: "right",
+            }}
+          />
+        </Grid>
+        <Grid xs={4}
+          style={{
+            backgroundColor: "darkgray",
+            borderRadius: "0 0 10px 10px",
+          }}>
+          <input
+            value={result}
+            style={{
+              border: "none",
+              backgroundColor: "darkgray",
+              width: "100%",
+              fontSize: "1.3em",
+              color: "whitesmoke",
+              textAlign: "right"
+            }}
+          />
         </Grid>
         {
           buttons.map((button) => {
@@ -132,9 +154,17 @@ function App() {
             }
             return (
               <Grid xs={1}>
-                <Button
+                <div
                   onClick={button.onClick}
-                  size={"lg"}>{button.value}</Button>
+                  style={{
+                    backgroundColor: "gray",
+                    paddingTop: "40%",
+                    paddingBottom: "40%",
+                    width: "100%",
+                    borderRadius: "50%"
+                  }}>
+                  {button.value}
+                </div>
               </Grid>
             )
           })
